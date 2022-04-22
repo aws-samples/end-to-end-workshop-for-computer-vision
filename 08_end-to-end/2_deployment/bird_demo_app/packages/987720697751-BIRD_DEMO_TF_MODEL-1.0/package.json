@@ -1,0 +1,58 @@
+{
+    "nodePackage": {
+        "envelopeVersion": "2021-01-01",
+        "name": "BIRD_DEMO_TF_MODEL",
+        "version": "1.0",
+        "description": "Default description for package ",
+        "assets": [
+            {
+                "name": "model_asset",
+                "implementations": [
+                    {
+                        "type": "model",
+                        "assetUri": "ae6c7df9e9aaff6e5001f88c82f5cc938ab84b7a01a38247083f2542f30e65cf.tar.gz",
+                        "descriptorUri": "1d13ccfae4b1b8cde03bfa404c7115538d511320db773a24fed30a2b9d78f355.json"
+                    }
+                ]
+            }
+        ],
+        "interfaces": [
+            {
+                "name": "interface",
+                "category": "ml_model",
+                "asset": "model_asset",
+                "inputs": [
+                    {
+                        "description": "Video stream output",
+                        "name": "video_in",
+                        "type": "media"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "description": "Video stream output",
+                        "name": "video_out",
+                        "type": "media"
+                    }
+                ]
+            },
+            {
+                "name": "model_asset_interface",
+                "category": "ml_model",
+                "asset": "model_asset",
+                "inputs": [
+                    {
+                        "name": "video_in",
+                        "type": "media"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "video_out",
+                        "type": "media"
+                    }
+                ]
+            }
+        ]
+    }
+}

@@ -1,0 +1,18 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+        <crowd-form>
+          <crowd-image-classifier
+            name="crowd-image-classifier"
+            src="{{ task.input.taskObject | grant_read_access }}"
+            header="please classify"
+            categories="{{ task.input.labels | to_json | escape }}"
+          >
+            <full-instructions header="Image classification instructions">
+              <ol><li><strong>Read</strong> the task carefully and inspect the image.</li>
+              <li><strong>Read</strong> the options and review the examples provided to understand more about the labels.</li>
+              <li><strong>Choose</strong> the appropriate label that best suits the image.</li></ol>
+            </full-instructions>
+            <short-instructions>
+              <p>Dear Annotator, please tell me whether what you can see in the image. Thank you!</p>
+            </short-instructions>
+          </crowd-image-classifier>
+        </crowd-form>

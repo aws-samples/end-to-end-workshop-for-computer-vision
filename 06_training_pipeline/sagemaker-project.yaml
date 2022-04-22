@@ -1,0 +1,128 @@
+Description: Upload an object to an S3 bucket, triggering a Lambda event, returning the object key as a Stack Output.
+Parameters:
+  SageMakerProjectName:
+    Type: String
+    Description: The name of the SageMaker project. This name is alos used to create the S3 Bucket (most not already exist)
+  SageMakerProjectId:
+    Type: String
+    Description: Service generated Id of the project.
+    MaxLength: 16
+    MinLength: 1
+  LambdaBucket:
+    Description: S3 Bucket of your lambda file
+    Type: String
+    Default: sagemaker-us-east-1-909708043314
+  LambdaKey:
+    Description: S3 Key of your lambnda zip file
+    Type: String
+    Default: lambda.zip
+  PipelineDefinitionBucket:
+    Description: S3 Bucket of your pipeline definition file
+    Type: String
+    Default: sagemaker-us-east-1-909708043314
+  PipelineDefinitionKey:
+    Description: S3 Key of your pipeline definition file
+    Type: String
+    Default: definition-f73e8595-7411-4a11-a376-07bfc0822060.json
+  PipelineExecutionRoleArn:
+    Description: Execution Role Arn for your SageMaker Pipeline (if use studio, use the same execution role as studio)
+    Type: String
+    Default: arn:aws:iam::909708043314:role/service-role/AmazonSageMaker-ExecutionRole-20210611T143223
+  EvaluationECRImage:
+    Description: ECR URL for the model evaluation container image
+    Type: String
+    Default: 909708043314.dkr.ecr.us-east-1.amazonaws.com/sagemaker-tf-container:2.0
+Resources:
+  Bucket:
+    Type: AWS::S3::Bucket
+    DependsOn: BucketPermission
+    Properties:
+      BucketName: !Ref SageMakerProjectName
+      NotificationConfiguration:
+        LambdaConfigurations:
+        - Event: 's3:ObjectCreated:*'
+          Function: !GetAtt BucketWatcher.Arn
+          Filter:
+            S3Key:
+              Rules:
+                - Name: prefix
+                  Value: pipeline/
+                - Name: suffix
+                  Value: .json
+  BucketPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: 'lambda:InvokeFunction'
+      FunctionName: !Ref BucketWatcher
+      Principal: s3.amazonaws.com
+      SourceAccount: !Ref "AWS::AccountId"
+      SourceArn: !Sub "arn:aws:s3:::${SageMakerProjectName}"
+  BucketWatcher:
+    Type: AWS::Lambda::Function
+    Properties:
+      Description: Sends a Wait Condition signal to Handle when invoked
+      Handler: index.lambda_handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        S3Bucket: !Ref LambdaBucket
+        S3Key: !Ref LambdaKey
+      Timeout: 5
+      Runtime: python3.7
+      Environment:
+        Variables:
+            PipelineName: !Sub "${SageMakerProjectName}-pipeline"
+            RoleArn: !Ref PipelineExecutionRoleArn
+            EvaluationImage: !Ref EvaluationECRImage
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal: {Service: [lambda.amazonaws.com, sagemaker.amazonaws.com]}
+          Action: ['sts:AssumeRole']
+      Path: /
+      ManagedPolicyArns:
+      - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+      - "arn:aws:iam::aws:policy/AmazonSageMakerFullAccess"
+      Policies:
+      - PolicyName: S3Policy
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - 's3:*'
+              Resource: 
+                - "arn:aws:s3:::*"
+  MyPipeline:
+    Type: AWS::SageMaker::Pipeline
+    Properties:
+      PipelineName: !Sub "${SageMakerProjectName}-pipeline"
+      PipelineDisplayName: !Sub "${SageMakerProjectName}-pipeline"
+      PipelineDescription: !Sub "${SageMakerProjectName}-pipeline"
+      PipelineDefinition:
+        PipelineDefinitionS3Location:
+          Bucket: !Ref PipelineDefinitionBucket
+          Key: !Ref PipelineDefinitionKey
+      RoleArn: !Ref PipelineExecutionRoleArn
+      Tags:
+        - Key: sagemaker:project-id
+          Value:
+            Ref: SageMakerProjectId
+        - Key: sagemaker:project-name
+          Value:
+            Ref: SageMakerProjectName
+  MyModelPackageGroup:
+    Type: AWS::SageMaker::ModelPackageGroup
+    Properties: 
+      ModelPackageGroupDescription: !Sub "${SageMakerProjectName}-model-group"
+      ModelPackageGroupName: !Sub "${SageMakerProjectName}-model-group"
+      Tags: 
+        - Key: sagemaker:project-id
+          Value:
+            Ref: SageMakerProjectId
+        - Key: sagemaker:project-name
+          Value:
+            Ref: SageMakerProjectName
