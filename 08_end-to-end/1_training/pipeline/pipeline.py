@@ -200,7 +200,7 @@ def get_pipeline(
     model_path = f"s3://{default_bucket}/{base_job_prefix}/output/models"
     checkpoint_s3_uri = f"s3://{default_bucket}/{base_job_prefix}/output/checkpoints"
     
-    TF_FRAMEWORK_VERSION = '2.1'
+    TF_FRAMEWORK_VERSION = '2.1.3'
     
     profiler_config = ProfilerConfig(
         system_monitor_interval_millis = 500,
