@@ -4,7 +4,7 @@ Pillow
 scikit-learn
 pandas
 numpy
-tensorflow==2.1.3
+tensorflow==2.5.3
 boto3==1.18.4
 sagemaker-experiments
 matplotlib==3.4.2
