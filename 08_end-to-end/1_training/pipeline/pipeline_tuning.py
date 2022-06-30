@@ -121,20 +121,18 @@ def get_pipeline(
     ## parameters it will skip the training part and reuse the previous trained model
     cache_config = CacheConfig(enable_caching=True, expire_after="30d")
 
+    processing_instance_type = "ml.m5.xlarge"
+    training_instance_type = "ml.c5.4xlarge"
+
     # Parameters for pipeline execution
     processing_instance_count = ParameterInteger(
         name="ProcessingInstanceCount", default_value=1
     )
-    processing_instance_type = ParameterString(
-        name="ProcessingInstanceType", default_value="ml.m5.xlarge"
-    )
-    
+
     training_instance_count = ParameterInteger(
         name="TrainingInstanceCount", default_value=1
     )
-    training_instance_type = ParameterString(
-        name="TrainingInstanceType", default_value="ml.c5.4xlarge"
-    )
+
     model_approval_status = ParameterString(
         name="ModelApprovalStatus",
         default_value="PendingManualApproval"  # ModelApprovalStatus can be set to a default of "Approved" if you don't want manual approval.

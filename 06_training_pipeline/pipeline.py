@@ -82,23 +82,19 @@ def get_pipeline(
     sagemaker_session = get_session(region, default_bucket)
     if role is None:
         role = sagemaker.session.get_execution_role(sagemaker_session)
-        
+
+    processing_instance_type = "ml.m5.xlarge"
+    training_instance_type = "ml.c5.4xlarge"
+
     # Define parameters for pipeline execution
     processing_instance_count = ParameterInteger(
         name="ProcessingInstanceCount", default_value=1
-    )
-
-    processing_instance_type = ParameterString(
-        name="ProcessingInstanceType", default_value="ml.m5.xlarge"
     )
 
     training_instance_count = ParameterInteger(
         name="TrainingInstanceCount", default_value=1
     )
 
-    training_instance_type = ParameterString(
-        name="TrainingInstanceType", default_value="ml.c5.4xlarge"
-    )
 
     model_approval_status = ParameterString(
         name="ModelApprovalStatus",
