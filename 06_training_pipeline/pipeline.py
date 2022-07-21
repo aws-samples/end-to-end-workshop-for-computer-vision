@@ -88,17 +88,18 @@ def get_pipeline(
         name="ProcessingInstanceCount", default_value=1
     )
 
-    processing_instance_type = ParameterString(
-        name="ProcessingInstanceType", default_value="ml.m5.xlarge"
-    )
-
-    training_instance_count = ParameterInteger(
-        name="TrainingInstanceCount", default_value=1
-    )
-
-    training_instance_type = ParameterString(
-        name="TrainingInstanceType", default_value="ml.c5.4xlarge"
-    )
+    processing_instance_type = "ml.m5.xlarge"
+#     processing_instance_type = ParameterString(
+#         name="ProcessingInstanceType", default_value="ml.m5.xlarge"
+#     )
+    training_instance_count = 1
+#     training_instance_count = ParameterInteger(
+#         name="TrainingInstanceCount", default_value=1
+#     )
+    training_instance_type = "ml.c5.4xlarge"
+#     training_instance_type = ParameterString(
+#         name="TrainingInstanceType", default_value="ml.c5.4xlarge"
+#     )
 
     model_approval_status = ParameterString(
         name="ModelApprovalStatus",
@@ -166,7 +167,7 @@ def get_pipeline(
     
     # Training step begins here =============================
     
-    TF_FRAMEWORK_VERSION = '2.1'
+    TF_FRAMEWORK_VERSION = '2.4.1'
 
     hyperparameters = {'initial_epochs':     5,
                        'batch_size':         8,
@@ -227,7 +228,7 @@ def get_pipeline(
                                    max_wait=60*60*12, # Seconds to wait for spot instances to become available
                                    checkpoint_s3_uri=checkpoint_s3_uri,
                                    framework_version=TF_FRAMEWORK_VERSION, 
-                                   py_version='py3',
+                                   py_version='py37',
                                    base_job_name=base_job_prefix,
                                    script_mode=True,
                                    tags=[tags])
@@ -242,7 +243,7 @@ def get_pipeline(
                            metric_definitions=metric_definitions,
                            role=role,
                            framework_version=TF_FRAMEWORK_VERSION, 
-                           py_version='py3',
+                           py_version='py37',
                            base_job_name=base_job_prefix,
                            script_mode=True,
                            tags=[tags])
@@ -361,10 +362,10 @@ def get_pipeline(
     pipeline = Pipeline(
         name=pipeline_name,
         parameters=[
-            processing_instance_type,
+#             processing_instance_type,
             processing_instance_count,
-            training_instance_count,
-            training_instance_type,
+#             training_instance_count,
+#             training_instance_type,
             model_approval_status,
             input_data,
             input_annotation,

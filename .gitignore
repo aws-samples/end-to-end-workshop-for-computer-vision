@@ -1,3 +1,5 @@
 __pycache__
 .ipynb_checkpoints
 inference-test-data/
+*.mp4
+*.jpg
