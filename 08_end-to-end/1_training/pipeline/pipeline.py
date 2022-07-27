@@ -124,16 +124,20 @@ def get_pipeline(
     processing_instance_count = ParameterInteger(
         name="ProcessingInstanceCount", default_value=1
     )
-    processing_instance_type = ParameterString(
-        name="ProcessingInstanceType", default_value="ml.m5.xlarge"
-    )
     
-    training_instance_count = ParameterInteger(
-        name="TrainingInstanceCount", default_value=1
-    )
-    training_instance_type = ParameterString(
-        name="TrainingInstanceType", default_value="ml.c5.4xlarge"
-    )
+    processing_instance_type = "ml.m5.xlarge"
+#     processing_instance_type = ParameterString(
+#         name="ProcessingInstanceType", default_value="ml.m5.xlarge"
+#     )
+    training_instance_count = 1
+#     training_instance_count = ParameterInteger(
+#         name="TrainingInstanceCount", default_value=1
+#     )
+    
+    training_instance_type = "ml.c5.4xlarge"
+#     training_instance_type = ParameterString(
+#         name="TrainingInstanceType", default_value="ml.c5.4xlarge"
+#     )
     model_approval_status = ParameterString(
         name="ModelApprovalStatus",
         default_value="PendingManualApproval"  # ModelApprovalStatus can be set to a default of "Approved" if you don't want manual approval.
@@ -200,7 +204,7 @@ def get_pipeline(
     model_path = f"s3://{default_bucket}/{base_job_prefix}/output/models"
     checkpoint_s3_uri = f"s3://{default_bucket}/{base_job_prefix}/output/checkpoints"
     
-    TF_FRAMEWORK_VERSION = '2.1.3'
+    TF_FRAMEWORK_VERSION = '2.4.1'
     
     profiler_config = ProfilerConfig(
         system_monitor_interval_millis = 500,
@@ -272,7 +276,7 @@ def get_pipeline(
                            metric_definitions=metric_definitions,
                            role=role,
                            framework_version=TF_FRAMEWORK_VERSION,
-                           py_version='py3',
+                           py_version='py37',
                            base_job_name=f"{base_job_prefix}-hvd",
                            profiler_config=profiler_config,
                            debugger_hook_config=debugger_hook_config,
@@ -383,10 +387,10 @@ def get_pipeline(
     pipeline = Pipeline(
         name=pipeline_name,
         parameters=[
-            processing_instance_type,
+#             processing_instance_type,
             processing_instance_count,
-            training_instance_count,
-            training_instance_type,
+#             training_instance_count,
+#             training_instance_type,
             model_approval_status,
             input_data,
             input_manifest,
