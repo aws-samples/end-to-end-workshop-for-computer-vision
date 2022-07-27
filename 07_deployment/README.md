@@ -4,10 +4,11 @@
 
 # Introduction
 
-Once your models have been built, trained, and evaluated such that you are satisfied with their performance, you would likely want to deploy them to get predictions. This lab focuses on real time predictions in three ways
-* [Real time inference deployments](https://docs.aws.amazon.com/sagemaker/latest/dg/realtime-endpoints.html) to cloud endpoints with compute you have control over
-* [Serverless inference deployments](https://docs.aws.amazon.com/sagemaker/latest/dg/serverless-endpoints.html) to cloud endpoints with compute provisioned and manged by Sagemaker
-* [Edge deployments](https://docs.aws.amazon.com/sagemaker/latest/dg/edge.html) to devices using [AWS IoT Greengrass for ML Inferneces](https://aws.amazon.com/greengrass/ml/)
+Once your models have been built, trained, and evaluated such that you are satisfied with their performance, you would likely want to deploy them to get predictions. This lab focuses on the following deployment types:
+* [Cloud deployment](https://docs.aws.amazon.com/sagemaker/latest/dg/deploy-model.html) using Amazon SageMaker hosting services
+  * [Real time inference deployment](https://docs.aws.amazon.com/sagemaker/latest/dg/realtime-endpoints.html) to cloud endpoints       with compute you have control over.
+  * [Serverless inference deployment](https://docs.aws.amazon.com/sagemaker/latest/dg/serverless-endpoints.html) to cloud endpoints with compute provisioned and manged by Sagemaker.
+* [Edge deployment](https://docs.aws.amazon.com/sagemaker/latest/dg/edge.html) to devices using [AWS IoT Greengrass for ML Inferences](https://aws.amazon.com/greengrass/ml/).
 
 ---
 # Prerequisites
