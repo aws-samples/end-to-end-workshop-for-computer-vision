@@ -15,7 +15,7 @@ Parameters:
   LambdaKey:
     Description: S3 Key of your lambnda zip file
     Type: String
-    Default: lambda.zip
+    Default: cv-week4/lambda.zip
   PipelineDefinitionBucket:
     Description: S3 Bucket of your pipeline definition file
     Type: String
@@ -23,7 +23,7 @@ Parameters:
   PipelineDefinitionKey:
     Description: S3 Key of your pipeline definition file
     Type: String
-    Default: definition-f73e8595-7411-4a11-a376-07bfc0822060.json
+    Default: cv-week4/pipeline-definition.json
   PipelineExecutionRoleArn:
     Description: Execution Role Arn for your SageMaker Pipeline (if use studio, use the same execution role as studio)
     Type: String
