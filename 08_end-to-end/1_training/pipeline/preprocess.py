@@ -1,8 +1,9 @@
+
+import sys
 import tensorflow as tf
 import argparse
 import boto3
 import random
-import sys
 import os
 import pathlib
 import glob

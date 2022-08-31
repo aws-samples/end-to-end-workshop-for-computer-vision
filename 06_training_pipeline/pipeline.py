@@ -83,7 +83,9 @@ def get_pipeline(
     sagemaker_session = get_session(region, default_bucket)
     if role is None:
         role = sagemaker.session.get_execution_role(sagemaker_session)
-        
+    
+    account = sagemaker_session.account_id()
+
     # Define parameters for pipeline execution
     processing_instance_count = ParameterInteger(
         name="ProcessingInstanceCount", default_value=1
@@ -109,7 +111,7 @@ def get_pipeline(
 
     input_data = ParameterString(
         name="InputDataUrl",
-        default_value='s3://sagemaker-us-east-1-909708043314/cv-week4/full/data'
+        default_value=f's3://sagemaker-{region}-{account}/cv-week4/full/data'
     )
 
     input_annotation = ParameterString(
