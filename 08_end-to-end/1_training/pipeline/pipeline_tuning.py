@@ -30,7 +30,7 @@ from sagemaker.inputs import TrainingInput
 from sagemaker.processing import (
     ProcessingInput,
     ProcessingOutput,
-    ScriptProcessor,
+    FrameworkProcessor,
 )
 
 from sagemaker.debugger import (ProfilerConfig,
@@ -65,6 +65,7 @@ from sagemaker.workflow.parameters import (
     ParameterString,
 )
 from sagemaker.workflow.pipeline import Pipeline
+from sagemaker.workflow.pipeline_context import PipelineSession
 from sagemaker.workflow.properties import PropertyFile
 from sagemaker.workflow.steps import ProcessingStep, TrainingStep, CacheConfig, TuningStep
 
@@ -116,6 +117,8 @@ def get_pipeline(
     sagemaker_session = get_session(region, default_bucket)
     if role is None:
         role = sagemaker.session.get_execution_role(sagemaker_session)
+    
+    account = sagemaker_session.account_id()
         
     ## By enabling cache, if you run this pipeline again, without changing the input 
     ## parameters it will skip the training part and reuse the previous trained model
@@ -138,44 +141,43 @@ def get_pipeline(
 #     training_instance_type = ParameterString(
 #         name="TrainingInstanceType", default_value="ml.c5.4xlarge"
 #     )
+    TF_FRAMEWORK_VERSION = '2.4.1'
+
     model_approval_status = ParameterString(
         name="ModelApprovalStatus",
         default_value="PendingManualApproval"  # ModelApprovalStatus can be set to a default of "Approved" if you don't want manual approval.
     )
     input_data = ParameterString(
         name="InputDataUrl",
-        default_value="s3://sagemaker-us-east-1-909708043314/bird-groundtruth/unlabeled/images",
+        default_value=f"s3://sagemaker-{region}-{account}/bird-groundtruth/unlabeled/images",
     )
     
     input_manifest = ParameterString(
         name="InputManifestUrl",
-        default_value="s3://sagemaker-us-east-1-909708043314/bird-groundtruth/pipeline/manifest",
-    )
-
-    process_image = ParameterString(
-        name="ProcessImage",
-        default_value="909708043314.dkr.ecr.us-east-1.amazonaws.com/sagemaker-tf-container:2.0",
+        default_value=f"s3://sagemaker-{region}-{account}/bird-groundtruth/pipeline/manifest",
     )
     
     preprocess_job_name = f"{base_job_prefix}Preprocess"
     # Processing step for feature engineering
-    script_processor = ScriptProcessor(
-        image_uri=process_image,
-        command=["python3"],
-        instance_type=processing_instance_type,
-        instance_count=processing_instance_count,
-        base_job_name=preprocess_job_name,  # choose any name
-        sagemaker_session=sagemaker_session,
+    pipeline_session = PipelineSession()
+    
+    script_process = FrameworkProcessor(
+        estimator_cls=TensorFlow,
+        framework_version=TF_FRAMEWORK_VERSION,
+        base_job_name = preprocess_job_name,
+        command=['python3'],
+        py_version="py37",
         role=role,
+        instance_count=processing_instance_count,
+        instance_type=processing_instance_type,
+        sagemaker_session = pipeline_session
     )
     
     output_s3_uri = f's3://{default_bucket}/{base_job_prefix}/outputs'#/{uuid.uuid4()}'
 
-    step_process = ProcessingStep(
-        name=preprocess_job_name,  # choose any name
-        processor=script_processor,
+    step_process_args = script_process.run(
         code=os.path.join(BASE_DIR, "preprocess.py"),
-        job_arguments=["--manifest", "manifest",
+        arguments=["--manifest", "manifest",
                        "--images", "images"],
         inputs=[
             ProcessingInput(source=input_data,
@@ -197,6 +199,10 @@ def get_pipeline(
                              source="/opt/ml/processing/output/classes", 
                              destination = output_s3_uri +'/classes'),
         ],
+    )
+    step_process = ProcessingStep(
+        name=preprocess_job_name,  # choose any name
+        step_args = step_process_args,
         cache_config=cache_config
     )
 
@@ -204,9 +210,7 @@ def get_pipeline(
     model_path = f"s3://{default_bucket}/{base_job_prefix}/output/models"
     checkpoint_s3_uri = f"s3://{default_bucket}/{base_job_prefix}/output/checkpoints"
     
-    TF_FRAMEWORK_VERSION = '2.4.1'
-    
-    hyperparameters = {'batch_size': 8,
+    hyperparameters = {'batch_size': 32,
                        'data_dir': '/opt/ml/input/data'}
     
     metric_definitions = [
@@ -248,7 +252,7 @@ def get_pipeline(
                            ])
 
     hyperparameter_ranges = {
-        'epochs': IntegerParameter(15, 20),
+        'epochs': IntegerParameter(10, 15),
         'dropout': ContinuousParameter(0.7, 0.8),
         'lr': ContinuousParameter(0.00001, 0.001)}
     
@@ -277,25 +281,36 @@ def get_pipeline(
         inputs = inputs,
         cache_config=cache_config
     )
-
-#     step_train = TrainingStep(
-#         name=f"{base_job_prefix}Train",
-#         estimator=estimator,
-#         inputs=inputs,
-#         cache_config=cache_config
-#     )
-#     model_bucket_key = f"{default_bucket}/{base_job_prefix}/output/models"
     
     evaluation_job_name = f"{base_job_prefix}Evaluation"
     # Processing step for evaluation
-    script_eval = ScriptProcessor(
-        image_uri=process_image,
-        command=["python3"],
-        instance_type=processing_instance_type,
-        instance_count=processing_instance_count,
-        base_job_name=evaluation_job_name,
-        sagemaker_session=sagemaker_session,
+    
+    script_eval = FrameworkProcessor(
+        estimator_cls=TensorFlow,
+        framework_version=TF_FRAMEWORK_VERSION,
+        base_job_name = evaluation_job_name,
+        command=['python3'],
+        py_version="py37",
         role=role,
+        instance_count=processing_instance_count,
+        instance_type=processing_instance_type,
+        sagemaker_session = pipeline_session
+    )
+    
+    step_eval_args = script_eval.run(
+        code=os.path.join(BASE_DIR, "evaluation.py"),
+        arguments=["--model-file", "model.tar.gz",
+                       "--classes-file", "classes.json"],
+        inputs=[ProcessingInput(source=step_process.properties.ProcessingOutputConfig.Outputs["test_data"].S3Output.S3Uri, 
+                                destination="/opt/ml/processing/input/test"),
+                ProcessingInput(source=step_process.properties.ProcessingOutputConfig.Outputs["classes"].S3Output.S3Uri, 
+                                destination="/opt/ml/processing/input/classes"),
+                ProcessingInput(source=step_tuning.get_top_model_s3_uri(top_k=0, s3_bucket=default_bucket), 
+                                destination="/opt/ml/processing/model"),
+               ],
+        outputs=[
+            ProcessingOutput(output_name="evaluation", source="/opt/ml/processing/output"),
+        ],
     )
     
     evaluation_report = PropertyFile(
@@ -303,22 +318,10 @@ def get_pipeline(
         output_name="evaluation",
         path="evaluation.json",
     )
+    
     step_eval = ProcessingStep(
         name=evaluation_job_name,
-        processor=script_eval,
-        code=os.path.join(BASE_DIR, "evaluation.py"),
-        job_arguments=["--model-file", "model.tar.gz",
-                       "--classes-file", "classes.json"],
-        inputs=[ProcessingInput(source=step_process.properties.ProcessingOutputConfig.Outputs["test_data"].S3Output.S3Uri, 
-                                destination="/opt/ml/processing/input/test"),
-                ProcessingInput(source=step_process.properties.ProcessingOutputConfig.Outputs["classes"].S3Output.S3Uri,
-                                destination="/opt/ml/processing/input/classes"),
-                ProcessingInput(source=step_tuning.get_top_model_s3_uri(top_k=0, s3_bucket=default_bucket), 
-                                destination="/opt/ml/processing/model"),
-                ],
-        outputs=[
-            ProcessingOutput(output_name="evaluation", source="/opt/ml/processing/output"),
-        ],
+        step_args = step_eval_args,
         property_files=[evaluation_report],
         cache_config=cache_config
     )
@@ -327,9 +330,7 @@ def get_pipeline(
     model_metrics = ModelMetrics(
         model_statistics=MetricsSource(
             s3_uri="{}/evaluation.json".format(
-                step_eval.arguments["ProcessingOutputConfig"]["Outputs"][0]["S3Output"][
-                    "S3Uri"
-                ]
+                step_eval.arguments["ProcessingOutputConfig"]["Outputs"][0]["S3Output"]["S3Uri"]
             ),
             content_type="application/json",
         )
@@ -375,8 +376,7 @@ def get_pipeline(
 #             training_instance_type,
             model_approval_status,
             input_data,
-            input_manifest,
-            process_image,
+            input_manifest
         ],
         steps=[step_process, step_tuning, step_eval, step_cond],
         sagemaker_session=sagemaker_session,

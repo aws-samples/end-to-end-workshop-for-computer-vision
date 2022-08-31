@@ -11,27 +11,18 @@ Parameters:
   LambdaBucket:
     Description: S3 Bucket of your lambda file
     Type: String
-    Default: sagemaker-us-east-1-909708043314
   LambdaKey:
     Description: S3 Key of your lambnda zip file
     Type: String
-    Default: cv-week4/lambda.zip
   PipelineDefinitionBucket:
     Description: S3 Bucket of your pipeline definition file
     Type: String
-    Default: sagemaker-us-east-1-909708043314
   PipelineDefinitionKey:
     Description: S3 Key of your pipeline definition file
     Type: String
-    Default: cv-week4/pipeline-definition.json
   PipelineExecutionRoleArn:
     Description: Execution Role Arn for your SageMaker Pipeline (if use studio, use the same execution role as studio)
     Type: String
-    Default: arn:aws:iam::909708043314:role/service-role/AmazonSageMaker-ExecutionRole-20210611T143223
-  EvaluationECRImage:
-    Description: ECR URL for the model evaluation container image
-    Type: String
-    Default: 909708043314.dkr.ecr.us-east-1.amazonaws.com/sagemaker-tf-container:2.0
 Resources:
   Bucket:
     Type: AWS::S3::Bucket
@@ -72,7 +63,6 @@ Resources:
         Variables:
             PipelineName: !Sub "${SageMakerProjectName}-pipeline"
             RoleArn: !Ref PipelineExecutionRoleArn
-            EvaluationImage: !Ref EvaluationECRImage
   LambdaExecutionRole:
     Type: AWS::IAM::Role
     Properties:

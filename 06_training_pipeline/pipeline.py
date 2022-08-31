@@ -20,7 +20,7 @@ from sagemaker.sklearn.processing import SKLearnProcessor
 from sagemaker.processing import (
     ProcessingInput,
     ProcessingOutput,
-    ScriptProcessor,
+    FrameworkProcessor,
 )
 
 from sagemaker.inputs import TrainingInput
@@ -30,6 +30,7 @@ from sagemaker.workflow.properties import PropertyFile
 
 from sagemaker.model_metrics import MetricsSource, ModelMetrics
 from sagemaker.workflow.step_collections import RegisterModel
+from sagemaker.workflow.pipeline_context import PipelineSession
 
 from sagemaker.workflow.conditions import ConditionGreaterThanOrEqualTo
 from sagemaker.workflow.condition_step import (
@@ -82,7 +83,9 @@ def get_pipeline(
     sagemaker_session = get_session(region, default_bucket)
     if role is None:
         role = sagemaker.session.get_execution_role(sagemaker_session)
-        
+    
+    account = sagemaker_session.account_id()
+
     # Define parameters for pipeline execution
     processing_instance_count = ParameterInteger(
         name="ProcessingInstanceCount", default_value=1
@@ -108,7 +111,7 @@ def get_pipeline(
 
     input_data = ParameterString(
         name="InputDataUrl",
-        default_value='s3://sagemaker-us-east-1-909708043314/cv-week4/full/data'
+        default_value=f's3://sagemaker-{region}-{account}/cv-week4/full/data'
     )
 
     input_annotation = ParameterString(
@@ -120,11 +123,6 @@ def get_pipeline(
     class_selection = ParameterString(
         name="ClassSelection",
         default_value="13, 17, 35, 36, 47, 68, 73, 87"
-    )
-
-    evaluation_image = ParameterString(
-        name="EvaluationImage",
-        default_value="909708043314.dkr.ecr.us-east-1.amazonaws.com/sagemaker-tf-container:2.0",
     )
     
     ## By enabling cache, if you run this pipeline again, without changing the input 
@@ -258,14 +256,32 @@ def get_pipeline(
         training_steps[t] = step_train
         
         # Evaluate Trained Models =======================
-        script_eval = ScriptProcessor(
-            image_uri=evaluation_image,
-            command=["python3"],
-            instance_type=processing_instance_type,
-            instance_count=processing_instance_count,
-            base_job_name=f"{base_job_prefix}-evaluation",
-            sagemaker_session=sagemaker_session,
+        pipeline_session = PipelineSession()
+
+        script_eval = FrameworkProcessor(
+            estimator_cls=TensorFlow,
+            framework_version=TF_FRAMEWORK_VERSION,
+            base_job_name = f"{base_job_prefix}-evaluation",
+            command=['python3'],
+            py_version="py37",
             role=role,
+            instance_count=processing_instance_count,
+            instance_type=processing_instance_type,
+            sagemaker_session = pipeline_session)
+        
+        step_args = script_eval.run(
+            code=os.path.join(BASE_DIR, "evaluation.py"),
+            arguments=["--model-file", "model.tar.gz"],
+            inputs=[ProcessingInput(source=step_process.properties.ProcessingOutputConfig.Outputs["test_data"].S3Output.S3Uri, 
+                                    destination="/opt/ml/processing/input/test"),
+                    ProcessingInput(source=step_process.properties.ProcessingOutputConfig.Outputs["manifest"].S3Output.S3Uri, 
+                                    destination="/opt/ml/processing/input/manifest"),
+                    ProcessingInput(source=step_train.properties.ModelArtifacts.S3ModelArtifacts, 
+                                    destination="/opt/ml/processing/model"),
+                   ],
+            outputs=[
+                ProcessingOutput(output_name="evaluation", source="/opt/ml/processing/evaluation"),
+            ]
         )
 
         evaluation_report = PropertyFile(
@@ -276,19 +292,7 @@ def get_pipeline(
 
         step_eval = ProcessingStep(
             name=f"BirdClassification{t}Eval",
-            processor=script_eval,
-            code=os.path.join(BASE_DIR, "evaluation.py"),
-            job_arguments=["--model-file", "model.tar.gz"],
-            inputs=[ProcessingInput(source=step_process.properties.ProcessingOutputConfig.Outputs["test_data"].S3Output.S3Uri, 
-                                    destination="/opt/ml/processing/input/test"),
-                    ProcessingInput(source=step_process.properties.ProcessingOutputConfig.Outputs["manifest"].S3Output.S3Uri,
-                                    destination="/opt/ml/processing/input/manifest"),
-                    ProcessingInput(source=step_train.properties.ModelArtifacts.S3ModelArtifacts, 
-                                    destination="/opt/ml/processing/model"),
-                    ],
-            outputs=[
-                ProcessingOutput(output_name="evaluation", source="/opt/ml/processing/evaluation"),
-            ],
+            step_args = step_args,
             property_files=[evaluation_report],
             cache_config=cache_config
         )
@@ -369,8 +373,7 @@ def get_pipeline(
             model_approval_status,
             input_data,
             input_annotation,
-            class_selection,
-            evaluation_image
+            class_selection
         ],
         steps=steps,
         sagemaker_session=sagemaker_session,

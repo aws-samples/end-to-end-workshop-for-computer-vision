@@ -9,7 +9,6 @@ sagemaker = boto3.client("sagemaker")
 
 pipeline_name = os.getenv('PipelineName')
 role = os.getenv('RoleArn')
-eval_image = os.getenv('EvaluationImage')
 
 def lambda_handler(event, context):
     if len(event['Records']) >0:
@@ -69,12 +68,6 @@ def lambda_handler(event, context):
                 PipelineName=pipeline_name,
                 PipelineExecutionDisplayName=pipeline_name,
                 PipelineExecutionDescription=f'pipeline from {key}',
-                PipelineParameters=[
-                    {
-                        'Name': 'EvaluationImage',
-                        'Value': eval_image
-                    },
-                ],
             )
         
         except Exception as e:
