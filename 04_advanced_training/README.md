@@ -1,15 +1,16 @@
 ## Advance Training on Amazon SageMaker
-Machine Learning (ML) practitioners commonly face performance and scalibilty challenges when training Computer Vision (CV) models. Your model and dataset size and complexity grows quickly. While model size and complexity can result in better accuracy, there are limits to the underlying service which, at some point, the model cannot fit into a single CPU/GPU or introduce significant bottlenecks during training. 
+Machine Learning (ML) practitioners commonly face performance and scalibilty challenges when training Computer Vision (CV) models. This is because your model size and complexity grows quickly with the increase in dataset size. While you can always scale up to use bigger instances with more CPUs and GPUs, there will eventually be capacity limits where you cannot scale up anymore.
 
-This is when we need to leverage advance training techniques like distributed training, debugging and monitoring to help us over come these challenges.
+This is when we need to leverage advanced training techniques like distributed training, debugging and monitoring to help us over come these challenges.
 
 ---
 
 ## Introduction
 
-This module covers advance training topics like debugging and distributed training. you will get exposure to SageMaker services like SageMaker debugger and Amazon SageMaker's distributed library. [SageMaker debugger](https://docs.aws.amazon.com/sagemaker/latest/dg/train-debugger.html) allows you to attach a debug process to your training job. This helps you monitor your training at a much granualar time interval and automatically profiling the instance to help you identify performance bottlenecks.
+This module covers advanced training topics like debugging and distributed training. You will get exposure to SageMaker services like [SageMaker debugger](https://docs.aws.amazon.com/sagemaker/latest/dg/train-debugger.html)and Amazon SageMaker's distributed library. SageMaker debugger allows you to attach a debug process to your training job. This helps you monitor your training at a much granualar time interval and automatically profiling the instance to help you identify performance bottlenecks.
 
-While [Amazon SageMaker's distributed library](https://docs.aws.amazon.com/sagemaker/latest/dg/distributed-training.html) helps you train deep learning models faster and cheaper. The [data parallel](https://docs.aws.amazon.com/sagemaker/latest/dg/data-parallel.html) feature in this library is a distributed data parallel training framework for PyTorch, TensorFlow, and MXNet. This module provides 2 examples demonstrateing how to use the SageMaker distributed data library to train a TensorFlow and PyTorch model using the [Caltech Birds (CUB 200 2011)](http://www.vision.caltech.edu/visipedia/CUB-200-2011.html) and MNIST dataset.
+
+While [Amazon SageMaker's distributed library](https://docs.aws.amazon.com/sagemaker/latest/dg/distributed-training.html) helps you train deep learning models faster and cheaper. The [data parallel](https://docs.aws.amazon.com/sagemaker/latest/dg/data-parallel.html) feature in this library is a distributed data parallel training framework for PyTorch, TensorFlow, and MXNet. This module provides 2 examples demonstrating how to use the SageMaker distributed data library to train a TensorFlow and PyTorch model using the [Caltech Birds (CUB 200 2011)](http://www.vision.caltech.edu/visipedia/CUB-200-2011.html) and MNIST dataset.
 
 ** Note: This Notebook was tested on Data Science Kernel in SageMaker Studio**
 
@@ -29,9 +30,9 @@ To get started, download the provided Jupyter notebook and associated files to y
 ---
 
 ## Dataset
-For the Tensorflow example, The dataset we are using is from [Caltech Birds (CUB 200 2011)](http://www.vision.caltech.edu/visipedia/CUB-200-2011.html) dataset contains 11,788 images across 200 bird species (the original technical report can be found here). Each species comes with around 60 images, with a typical size of about 350 pixels by 500 pixels. Bounding boxes are provided, as are annotations of bird parts. A recommended train/test split is given, but image size data is not. If you plan to complete the entire workshop, please keep the file to avoid re-download and re-process the data.
+For Tensorflow framework, we are using [Caltech Birds (CUB 200 2011)](http://www.vision.caltech.edu/visipedia/CUB-200-2011.html) dataset containing 11,788 images across 200 bird species (the original technical report can be found here). Each species comes with around 60 images, with a typical size of about 350 pixels by 500 pixels. Bounding boxes are provided, as are annotations of bird parts. A recommended train/test split is given, but image size data is not.
 
-For pytorch, we will use fashion mnist dataset
+For Pytorch, we are using [MNIST database](http://yann.lecun.com/exdb/mnist/). It has a training set of 60,000 examples, and a test set of 10,000 examples of handwritten digits.
 
 ---
 

@@ -1,6 +1,6 @@
 # Model Evlaution using SageMaker Processing
 
-Amazon SageMaker Processing is a Managed Solution to Run Data Processing and Model Evaluation Workloads. Data processing tasks such as feature engineering, data validation, model evaluation, and model interpretation are essential steps performed by engineers and data scientists in this machine learning workflow. 
+Amazon SageMaker Processing is a managed solution for various machine learning(ML) processes. These include feature engineering, data validation, model evaluation, model explainability, and many other essential steps performed by engineers and data scientists during their ML workflow.
 
 Your custom processing scripts will be containerized running in infrastructure that is created on demand and terminated automatically. You can choose to use a SageMaker optimized containers for popular data processing or model evaluation frameworks like Scikit learn, PySpark etc. or Bring Your Own Containers (BYOC).
 
@@ -10,9 +10,9 @@ Your custom processing scripts will be containerized running in infrastructure t
 
 # Introduction
 
-Postprocess and Model evaluation is an important step to vet out models before deployment. In this lab you will use ScriptProcessor from SageMaker Process to build a post processing step after model training to evaluate the performance of the model.  
+Postprocess and model evaluation are important steps before deployment the model to production. In this module you will use ScriptProcessor from SageMaker Processing to evaluate the model performance after the training.
 
-To setup your ScreptProcessor, we will build a custom container for a model evaluation script which will Load the tensorflow model, Load the test dataset and annotation (either from previous module or run the `optional-prepare-data-and-model.ipynb` notebook), and then run predicition and generate the confussion matrix. 
+To setup your ScriptProcessor, we will build a custom container for a model evaluation script which will Load the tensorflow model, load the test dataset and annotation (either from previous module or run the :code[optional-prepare-data-and-model.ipynb] notebook), and then run predicition and generate the confusion matrix.
 
 ---
 # Prerequisites

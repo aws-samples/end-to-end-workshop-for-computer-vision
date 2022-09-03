@@ -8,7 +8,7 @@ Your custom processing scripts will be containerized running in infrastructure t
 
 ---
 # Introduction
-Preprocess dataset before model training is an important step in the overall MLOps process. In this lab you will learn how to use [SKLearnProcessor](https://docs.aws.amazon.com/sagemaker/latest/dg/use-scikit-learn-processing-container.html), a type of SageMaker process uses Processcikit-learn scripts in a container image provided and maintained by SageMaker to preprocess data or evaluate models.
+Preprocess data before model training is an important step in the overall MLOps process. In this lab you will learn how to use [SKLearnProcessor](https://docs.aws.amazon.com/sagemaker/latest/dg/use-scikit-learn-processing-container.html), a type of SageMaker process uses Processcikit-learn scripts in a container image provided and maintained by SageMaker to preprocess data or evaluate models.
 
 The example script will first Load the bird dataset, and then split data into train, validation, and test channels, and finally Export the data and annotation files to S3.
 
@@ -29,7 +29,7 @@ Download the notebook into your environment, and you can run it by simply execut
 ---
 
 ## Dataset
-The dataset we are using is from [Caltech Birds (CUB 200 2011)](http://www.vision.caltech.edu/visipedia/CUB-200-2011.html) dataset contains 11,788 images across 200 bird species (the original technical report can be found here). Each species comes with around 60 images, with a typical size of about 350 pixels by 500 pixels. Bounding boxes are provided, as are annotations of bird parts. A recommended train/test split is given, but image size data is not.
+The dataset we are using is from [Caltech Birds (CUB 200 2011)](http://www.vision.caltech.edu/visipedia/CUB-200-2011.html) dataset contains 11,788 images across 200 bird species. Each species comes with around 60 images, with a typical size of about 350 pixels by 500 pixels. Bounding boxes are provided, as are annotations of bird parts. A recommended train/test split is given, but image size data is not.
 
 ![Bird Dataset](statics/birds.png)
 
@@ -39,4 +39,4 @@ Run the notebook to download the full dataset or download manually [here](https:
 
 # Review Outputs
 
-At the end of the lab, you dataset will be randomly split into train, valid, and test folders.  YUou will also have a csv manifest file for each channel. **If you plan to complete other modules in this workshop, please keep these data.  Otherwise, you can clean up after this lab.**
+At the end of the lab, your dataset will be randomly split into train, valid, and test folders.  YUou will also have a csv manifest file for each channel. **If you plan to complete other modules in this workshop, please keep these data.  Otherwise, you can clean up after this lab.**
