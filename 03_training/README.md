@@ -1,13 +1,12 @@
 ## Training a CV model on Amazon SageMaker
 
-Training models is easy on Amazon SageMaker. You simply specify the location of your data in Amazon S3, define the type and quantity of ML instances you need, and start training a model with just a few line of code. Amazon SageMaker sets up a distributed compute cluster, performs the training, outputs the result to Amazon S3, and tears down the cluster when complete. 
+Training models is easy on Amazon SageMaker. You simply specify the location of your data in Amazon S3, define the type and quantity number of ML instances you need, and start training a model with just a few lines of code. Amazon SageMaker sets up a distributed compute cluster, performs the training, outputs the result to Amazon S3, and tears down the cluster when complete. 
 
 ---
 ## Introduction
-This lab is focused on SageMaker Training for CV. We'll show an example for the performant Pipe Mode data ingestion, HyperParameter Optimization, as well as experiment tracking. In the future labs we'll show how experiment tracking can be automated through SageMaker Pipeline's native integration. 
+This module is focused on SageMaker training for Computer Vision models. You will go through examples of Bring Your Own(BYO) Script training, hyperparameter tuning, and experiment tracking. In the future modules, you will see how experiment tracking can be automated through SageMaker Pipeline's native integration.
 
-At the end of this lab, you should develop hands on experience 1) training custom CV models on Amazon SageMaker, 2) Build Automatic Model Tuning Jobs, and 3) Organize your ML experimentation using SageMaker Experiments.
-
+At the end of this lab, you should develop hands on experience 1) training custom CV models on Amazon SageMaker, 2) Build Automatic Model Tuning Jobs, and 3) Organize your ML experiments.
 
 ### Keras
 The model used for the tensorflow\cv_hpo_keras_pipe notebook is a simple deep CNN that is based on the [Keras examples](https://www.tensorflow.org/tutorials/images/cnn). 
@@ -34,7 +33,12 @@ To get started, download the provided Jupyter notebook and associated files to y
 ---
 
 ## Dataset
-The [CIFAR-10 dataset](https://www.cs.toronto.edu/~kriz/cifar.html) is one of the most popular machine learning datasets. It consists of 60,000 32x32 images belonging to 10 different classes (6,000 images per class). Here are the classes in the dataset, as well as 10 random images from each:
+
+The dataset we are using is from [Caltech Birds (CUB 200 2011)](http://www.vision.caltech.edu/visipedia/CUB-200-2011.html) dataset contains 11,788 images across 200 bird species. Each species comes with around 60 images, with a typical size of about 350 pixels by 500 pixels. Bounding boxes are provided, as are annotations of bird parts. A recommended train/test split is given, but image size data is not.
+
+![Bird Dataset](statics/birds.png)
+
+The [CIFAR-10 dataset](https://www.cs.toronto.edu/~kriz/cifar.html) is one of the most popular machine learning datasets. It consists of 60,000 32x32 images belonging to 10 different classes (6,000 images per class). Here are the classes in the dataset, as well as 10 random images from each.
 
 ![cifar10](statics/CIFAR-10.png)
 

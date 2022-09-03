@@ -2,7 +2,7 @@
 
 ## Introduction
 
-In this workshop, we will walk you through a step by step process to prepare, build and train computer vision models with Amazon SageMaker and deploy them to AWS panorama for edge inference. The workshop image classification of different species of birds, but the concept can be applied to a wide range of industrial applications. We will complete the CV MLOps lifecycle covering: data labeling, continuous integrated (CI/CD) training pipeline, model updates to the edge w/ approval, and, fianlly, edge inferencing and data capture back to the cloud.
+In this module, you will walk through an end-to-end process of developing an enterprise Computer Vision(CV) solution. The module starts with data label, then move to training orchestration where you will prepare, train, and evaluate the models. If model performance meets your expectation, you will deploy it to an AWS panorama for edge inference. The CV example is predicting different species of birds, but technique and concepts are applicable to a wide range of industrial CV use cases.
 
 ---
 ## Folder Structure
@@ -44,7 +44,7 @@ To run this notebook, you can simply execute each cell in order. To understand w
 - Access to Elastic Container Registry (ECR)
 - Familiarity with Training on Amazon SageMaker
 - Familiarity with SageMaker Processing Job
-- Familiarity with SageMaker Pipeline
+- Familiarity with SageMaker Pipelines
 - Familiarity with Python
 - Familiarity with AWS S3
 - Basic familiarity with AWS Command Line Interface (CLI) -- ideally, you should have it set up with credentials to access the AWS account you're running this notebook from.
@@ -53,7 +53,7 @@ To run this notebook, you can simply execute each cell in order. To understand w
 ---
 
 ## Dataset
-The dataset we are using is from [Caltech Birds (CUB 200 2011)](http://www.vision.caltech.edu/visipedia/CUB-200-2011.html) dataset contains 11,788 images across 200 bird species (the original technical report can be found here). Each species comes with around 60 images, with a typical size of about 350 pixels by 500 pixels. Bounding boxes are provided, as are annotations of bird parts. A recommended train/test split is given, but image size data is not.
+The dataset we are using is from [Caltech Birds (CUB 200 2011)](http://www.vision.caltech.edu/visipedia/CUB-200-2011.html) dataset contains 11,788 images across 200 bird species. Each species comes with around 60 images, with a typical size of about 350 pixels by 500 pixels. Bounding boxes are provided, as are annotations of bird parts. A recommended train/test split is given, but image size data is not.
 
 ![Bird Dataset](1_training/statics/birds.png)
 
