@@ -8,7 +8,7 @@ This is an end-to-end CV MLOps workshop aimed to help Machine Learning (ML) and 
 
 The curriculum consists following modules:
 
-1. [Preprocessing](01_preprocessing/README.md)
+1. [Preprocessing](01_preprocessing/data_preprocessing.ipynb)
 2. [Training on SageMaker](02_training/README.md)
 3. [Model Evaluation](03_model_evaluation/README.md)
 4. [Sagemaker Training Pipeline](04_training_pipeline/README.md)
