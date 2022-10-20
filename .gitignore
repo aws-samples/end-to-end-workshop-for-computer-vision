@@ -3,3 +3,5 @@ __pycache__
 inference-test-data/
 *.mp4
 *.jpg
+*.DS_Store
+.DS_Store
