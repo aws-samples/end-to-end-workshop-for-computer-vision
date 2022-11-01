@@ -8,6 +8,8 @@ import os
 import numpy as np
 import tarfile
 import uuid
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 from PIL import Image
 
@@ -137,3 +139,14 @@ if __name__ == "__main__":
     evaluation_path = f"{output_dir}/evaluation.json"
     with open(evaluation_path, "w") as f:
         f.write(json.dumps(report_dict))
+        
+    # Generate the confusion matrix visualization
+    #cm_df = pd.DataFrame(cnf_matrix, class_name_list, class_name_list)
+    cm_df = pd.DataFrame(cnf_matrix)
+    sns.set(font_scale=1)
+    cmap = "coolwarm"
+    sns.heatmap(cm_df, annot=True, fmt="d", cmap=cmap)
+    plt.title("Confusion Matrix")
+    plt.ylabel("true label")
+    plt.xlabel("predicted label")
+    plt.savefig(f"{output_dir}/confusion_matrix.png")
