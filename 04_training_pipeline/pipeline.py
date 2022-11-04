@@ -21,6 +21,7 @@ from sagemaker.processing import (
     ProcessingInput,
     ProcessingOutput,
     FrameworkProcessor,
+    ScriptProcessor,
 )
 
 from sagemaker.inputs import TrainingInput
@@ -71,6 +72,8 @@ def get_pipeline(
     model_package_group_name = "cv-week4-model-group",
     pipeline_name="cv-week4-pipeline",  
     base_job_prefix="cv-week4",  # Choose any name
+    container_name="sagemaker-tf-container", 
+    container_version="2.0",
 ):
     """Gets a SageMaker ML Pipeline instance
     Args:
@@ -257,18 +260,18 @@ def get_pipeline(
         
         # Evaluate Trained Models =======================
         pipeline_session = PipelineSession()
-
-        script_eval = FrameworkProcessor(
-            estimator_cls=TensorFlow,
-            framework_version=TF_FRAMEWORK_VERSION,
+        
+        image_uri = "{}.dkr.ecr.{}.amazonaws.com/{}:{}".format(account, region, container_name, container_version)
+        
+        script_eval = ScriptProcessor(
             base_job_name = f"{base_job_prefix}-evaluation",
             command=['python3'],
-            py_version="py37",
+            image_uri=image_uri,
             role=role,
             instance_count=processing_instance_count,
             instance_type=processing_instance_type,
             sagemaker_session = pipeline_session)
-        
+
         step_args = script_eval.run(
             code=os.path.join(BASE_DIR, "evaluation.py"),
             arguments=["--model-file", "model.tar.gz"],
