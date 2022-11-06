@@ -9,10 +9,10 @@ This is an end-to-end CV MLOps workshop aimed to help Machine Learning (ML) and 
 The curriculum consists following modules:
 
 1. [Preprocessing](01_preprocessing/data_preprocessing.ipynb)
-2. [Training on SageMaker](02_training/README.md)
-3. [Model Evaluation](03_model_evaluation/README.md)
-4. [Sagemaker Training Pipeline](04_training_pipeline/README.md)
-5. [Cloud Deployment](05_deployment/README.md)
+2. [Training on SageMaker](02_training/training.ipynb)
+3. [Model Evaluation](03_model_evaluation/model-evaluation-processing-job.ipynb)
+4. [Sagemaker Training Pipeline](04_training_pipeline/pipeline.ipynb)
+5. [Cloud Deployment](05_deployment/sagemaker-deploy-model-for-inference.ipynb)
 6. [End-to-end](06_end-to-end/README.md)
 
 To get started, load the provided Jupyter notebook and associated files to you SageMaker Studio Environment.
