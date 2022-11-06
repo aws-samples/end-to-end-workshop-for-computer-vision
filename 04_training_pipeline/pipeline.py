@@ -139,7 +139,7 @@ def get_pipeline(
                                         instance_type=processing_instance_type,
                                         instance_count=processing_instance_count)
 
-    output_s3_uri = f's3://{default_bucket}/{base_job_prefix}/outputs/{uuid.uuid4()}'
+    output_s3_uri = f's3://{default_bucket}/{base_job_prefix}/outputs/pipelines/{uuid.uuid4()}'
 
     step_process = ProcessingStep(
         name=f"{base_job_prefix}PreProcess",  # choose any name
@@ -210,8 +210,8 @@ def get_pipeline(
         tags['Key'] = 'TrainingType'
         tags['Value'] = t
             # Training step for generating model artifacts
-        model_path = f"s3://{default_bucket}/{base_job_prefix}/output/models"
-        checkpoint_s3_uri = f"s3://{default_bucket}/{base_job_prefix}/outputcheckpoints"
+        model_path = f"{output_s3_uri}/models"
+        checkpoint_s3_uri = f"{output_s3_uri}/outputcheckpoints"
 
         if t.lower() == 'spot':
             
