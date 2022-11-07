@@ -107,10 +107,6 @@ def get_pipeline(
 #         name="TrainingInstanceType", default_value="ml.c5.4xlarge"
 #     )
 
-    model_approval_status = ParameterString(
-        name="ModelApprovalStatus",
-        default_value="PendingManualApproval"  # ModelApprovalStatus can be set to a default of "Approved" if you don't want manual approval.
-    )
 
     input_data = ParameterString(
         name="InputDataUrl",
@@ -326,7 +322,6 @@ def get_pipeline(
             inference_instances=["ml.t2.medium", "ml.m5.large"],
             transform_instances=["ml.m5.large"],
             model_package_group_name=model_package_group_name,
-            approval_status=model_approval_status,
             model_metrics=model_metrics,
         )
         
@@ -369,11 +364,7 @@ def get_pipeline(
     pipeline = Pipeline(
         name=pipeline_name,
         parameters=[
-#             processing_instance_type,
             processing_instance_count,
-#             training_instance_count,
-#             training_instance_type,
-            model_approval_status,
             input_data,
             input_annotation,
             class_selection
