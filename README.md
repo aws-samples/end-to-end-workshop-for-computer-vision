@@ -3,19 +3,17 @@
 
 This is an end-to-end CV MLOps workshop aimed to help Machine Learning (ML) and Data Science (DS) teams build relevant AWS and SageMaker competencies for an enterprise scale solution. The content is derived from a real world CV use case where an image classification model is developed and trained on SageMaker and then deployed to an edge computing devices. Here is a diagram overview of the workshop and the learning outcome for each module
 
-![Workshop Overview](statics/cv-workshop-overview.png)
+![Workshop Overview](statics/overview.png)
 
 
 The curriculum consists following modules:
 
-1. [Data Labeling (Optional)](01_groundtruth(optional)/README.md)
-2. [Preprocessing](02_preprocessing/README.md)
-3. [Training on SageMaker](03_training/README.md)
-4. [Advance Training on SageMaker](04_advanced_training/README.md)
-5. [Model Evaluation](05_model_evaluation/README.md)
-6. [Sagemaker Trainning Pipeline](06_training_pipeline/README.md)
-7. [Edge Deployment](07_edge_deployment/README.md)
-8. [End-to-end](08_end-to-end/README.md)
+1. [Preprocessing](01_preprocessing/data_preprocessing.ipynb)
+2. [Training on SageMaker](02_training/training.ipynb)
+3. [Model Evaluation](03_model_evaluation/model-evaluation-processing-job.ipynb)
+4. [Sagemaker Training Pipeline](04_training_pipeline/pipeline.ipynb)
+5. [Cloud Deployment](05_deployment/sagemaker-deploy-model-for-inference.ipynb)
+6. [End-to-end](06_end-to-end/README.md)
 
 To get started, load the provided Jupyter notebook and associated files to you SageMaker Studio Environment.
 
