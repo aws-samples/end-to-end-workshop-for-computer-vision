@@ -19,7 +19,6 @@ import logging
 import os
 import re
 
-import matplotlib.pyplot as plt
 import numpy as np
 import sklearn.metrics
 import tensorflow as tf
