@@ -1,0 +1,5 @@
+# This is the set of Python packages that will get pip installed
+# at startup of the Amazon SageMaker endpoint or batch transformation. 
+Pillow
+numpy
+tensorflow==2.1

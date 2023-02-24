@@ -12,7 +12,7 @@ The curriculum consists following modules:
 2. [Preprocessing](02_preprocessing/README.md)
 3. [Training on SageMaker](03_training/README.md)
 4. [Advance Training on SageMaker](04_advanced_training/README.md)
-5. [Model Evaluation](05_model_evaluation/README.md)
+5. [Model Evaluation and Model Explainability](05_model_evaluation_and_model_explainability/README.md)
 6. [Sagemaker Trainning Pipeline](06_training_pipeline/README.md)
 7. [Edge Deployment](07_edge_deployment/README.md)
 8. [End-to-end](08_end-to-end/README.md)
