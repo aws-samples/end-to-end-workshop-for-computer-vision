@@ -280,7 +280,7 @@ def compile_model(model, lr, epochs):
     lr = lr * sdp.size()
 
     # Instantiate the optimizer
-    optimizer = SGD(lr=lr, momentum=0.9, decay=lr / epochs)
+    optimizer = SGD(lr=lr, momentum=0.9)
     
     optimizer = hook.wrap_optimizer(optimizer)
     

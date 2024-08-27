@@ -145,7 +145,7 @@ def get_pipeline(
 #         name="TrainingInstanceType", default_value="ml.c5.4xlarge"
 #     )
     
-    TF_FRAMEWORK_VERSION = '2.4.1'
+    TF_FRAMEWORK_VERSION = '2.8.0'
     
     model_approval_status = ParameterString(
         name="ModelApprovalStatus",
@@ -171,7 +171,7 @@ def get_pipeline(
         framework_version=TF_FRAMEWORK_VERSION,
         base_job_name = preprocess_job_name,
         command=['python3'],
-        py_version="py37",
+        py_version="py39",
         role=role,
         instance_count=processing_instance_count,
         instance_type=processing_instance_type,
@@ -286,7 +286,7 @@ def get_pipeline(
                            metric_definitions=metric_definitions,
                            role=role,
                            framework_version=TF_FRAMEWORK_VERSION,
-                           py_version='py37',
+                           py_version='py39',
                            base_job_name=f"{base_job_prefix}-hvd",
                            profiler_config=profiler_config,
                            debugger_hook_config=debugger_hook_config,
@@ -322,7 +322,7 @@ def get_pipeline(
         framework_version=TF_FRAMEWORK_VERSION,
         base_job_name = evaluation_job_name,
         command=['python3'],
-        py_version="py37",
+        py_version="py39",
         role=role,
         instance_count=processing_instance_count,
         instance_type=processing_instance_type,

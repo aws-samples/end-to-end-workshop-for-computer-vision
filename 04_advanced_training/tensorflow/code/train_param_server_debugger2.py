@@ -224,7 +224,7 @@ def train_model(model, train_dataset, num_train_images, valid_dataset, num_valid
 
     print(f'Batch size: {batch_size}, Number of Epoch: {epochs}, Learning Rate: {lr}')
     
-    optimizer = SGD(lr=lr, momentum=0.9, decay=lr / epochs)
+    optimizer = SGD(lr=lr, momentum=0.9)
     
     # Instantiate the loss function
     loss_fn = CategoricalCrossentropy(from_logits=True)

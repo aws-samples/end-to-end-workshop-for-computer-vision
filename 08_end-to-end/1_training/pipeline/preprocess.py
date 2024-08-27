@@ -16,7 +16,7 @@ def serialize_example(image, label):
 
     feature = {
         'image': tf.train.Feature(bytes_list=tf.train.BytesList(value=[image])),
-        'label': tf.train.Feature(int64_list=tf.train.Int64List(value=[label]))
+        'label': tf.train.Feature(int64_list=tf.train.Int64List(value=[int(label)]))
     }
 
     example_proto = tf.train.Example(features=tf.train.Features(feature=feature))

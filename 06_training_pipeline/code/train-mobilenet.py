@@ -211,7 +211,7 @@ def main(args):
         model, initial_epoch_number = load_checkpoint_model(args.checkpoint_path)
 
     fine_tuning_lr = args.fine_tuning_lr
-    model.compile(optimizer=SGD(lr=fine_tuning_lr, momentum=0.9, decay=fine_tuning_lr / NUM_EPOCHS), 
+    model.compile(optimizer=SGD(lr=fine_tuning_lr, momentum=0.9), 
                   loss='categorical_crossentropy', metrics=['accuracy'])
 
     callbacks = []

@@ -22,6 +22,7 @@ from sklearn.metrics import (
 from tensorflow import keras
 from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
 from tensorflow.keras.preprocessing import image
+from tensorflow.keras.optimizers import SGD
 # from smexperiments import tracker
 
 logger = logging.getLogger()
@@ -69,7 +70,8 @@ if __name__ == "__main__":
 
     print("Load model")
 
-    model = keras.models.load_model("{}/1".format(model_path))
+    model = keras.models.load_model("{}/1".format(model_path), compile=False)
+    model.compile(optimizer=SGD(lr=0.00001, momentum=0.9), loss='categorical_crossentropy', metrics=['accuracy'])
 
     print("Starting evaluation.")
     
