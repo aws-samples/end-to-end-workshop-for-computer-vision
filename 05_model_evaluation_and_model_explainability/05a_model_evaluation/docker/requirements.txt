@@ -3,7 +3,7 @@
 Pillow
 scikit-learn
 pandas
-numpy
+numpy==1.21.6
 tensorflow==2.11.1
 boto3==1.18.4
 sagemaker-experiments

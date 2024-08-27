@@ -211,7 +211,7 @@ def train_model(model, train_dataset, valid_dataset, lr, batch_size, epochs, che
     hook.save_scalar('batch_size', batch_size, sm_metric=True)
     hook.save_scalar('number_of_epochs', epochs, sm_metric=True)
     
-    optimizer = SGD(lr=lr, momentum=0.9, decay=lr / epochs)
+    optimizer = SGD(lr=lr, momentum=0.9)
     
     optimizer = hook.wrap_optimizer(optimizer)
     

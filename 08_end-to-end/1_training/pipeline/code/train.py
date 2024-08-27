@@ -215,8 +215,7 @@ def train_model(model, train_dataset, valid_dataset, lr, batch_size, epochs, cal
 
 
     model.compile(optimizer=SGD(lr=lr, 
-                                momentum=0.9, 
-                                decay=lr / epochs), 
+                                momentum=0.9), 
                   loss='categorical_crossentropy', metrics=['accuracy'])
 
     if call_back:

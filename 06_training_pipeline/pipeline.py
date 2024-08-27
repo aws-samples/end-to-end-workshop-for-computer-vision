@@ -165,7 +165,7 @@ def get_pipeline(
     
     # Training step begins here =============================
     
-    TF_FRAMEWORK_VERSION = '2.4.1'
+    TF_FRAMEWORK_VERSION = '2.8.0'
 
     hyperparameters = {'initial_epochs':     5,
                        'batch_size':         8,
@@ -226,7 +226,7 @@ def get_pipeline(
                                    max_wait=60*60*12, # Seconds to wait for spot instances to become available
                                    checkpoint_s3_uri=checkpoint_s3_uri,
                                    framework_version=TF_FRAMEWORK_VERSION, 
-                                   py_version='py37',
+                                   py_version='py39',
                                    base_job_name=base_job_prefix,
                                    script_mode=True,
                                    tags=[tags])
@@ -241,7 +241,7 @@ def get_pipeline(
                            metric_definitions=metric_definitions,
                            role=role,
                            framework_version=TF_FRAMEWORK_VERSION, 
-                           py_version='py37',
+                           py_version='py39',
                            base_job_name=base_job_prefix,
                            script_mode=True,
                            tags=[tags])
@@ -263,7 +263,7 @@ def get_pipeline(
             framework_version=TF_FRAMEWORK_VERSION,
             base_job_name = f"{base_job_prefix}-evaluation",
             command=['python3'],
-            py_version="py37",
+            py_version="py39",
             role=role,
             instance_count=processing_instance_count,
             instance_type=processing_instance_type,
